@@ -240,7 +240,6 @@ kpis  = get_season_kpis(selected_season, matches, deliveries, batter_col, runs_c
 label = f"Season {selected_season}" if selected_season != "All" else "All Seasons"
 
 if kpis:
-    # FIXED: Team logo with proper error handling
     wlogo = TEAM_LOGOS.get(kpis['winner'],"")
     logo_html = (f'<img src="{wlogo}" style="width:32px;height:32px;object-fit:contain;vertical-align:middle;" alt="{kpis["winner"]}" onerror="this.style.display=\'none\'" />' if wlogo else "🏆")
     
@@ -495,7 +494,6 @@ elif page == "📈 Match Analysis":
         minfo = matches[matches['id']==mid].iloc[0]
         mdel  = deliveries[deliveries['match_id']==mid]
         
-        # FIXED: Logo with error handling
         t1l = TEAM_LOGOS.get(minfo['team1'],"")
         t2l = TEAM_LOGOS.get(minfo['team2'],"")
         t1h = f'<img src="{t1l}" style="width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:4px;" alt="{minfo["team1"]}" onerror="this.style.display=\'none\'" />' if t1l else ""
