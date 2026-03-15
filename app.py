@@ -52,26 +52,14 @@ h1,h2,h3 { font-family:'Rajdhani',sans-serif !important; }
 [data-testid="stSidebar"] * { color:#ffffff !important; }
 [data-testid="stSidebar"] .stSelectbox label,[data-testid="stSidebar"] .stRadio > label { color:#f0a500 !important; font-size:12px !important; font-weight:700 !important; letter-spacing:1px; text-transform:uppercase; }
 [data-testid="stSidebar"] .stSelectbox > div > div { background-color:#0d1f3c !important; color:#ffffff !important; border:1px solid #f0a500 !important; border-radius:8px !important; }
-[data-testid="stSidebar"] .stRadio > div { background:rgba(240,165,0,0.04); border-radius:10px; padding:6px; border:1px solid rgba(240,165,0,0.1); }
-[data-testid="stSidebar"] .stRadio div[role="radiogroup"] label p { color:#ffffff !important; font-size:13px !important; }
 .stApp { background:#05101e; }
 .section-header { font-family:'Rajdhani',sans-serif; font-size:24px; font-weight:700; color:#f0a500; margin:20px 0 12px; padding-bottom:8px; border-bottom:2px solid rgba(240,165,0,0.35); letter-spacing:1px; }
 [data-testid="stMetric"] { background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid rgba(240,165,0,0.25); border-radius:14px; padding:14px !important; }
 [data-testid="stMetricValue"] { color:#f0a500 !important; }
-.kpi-banner { display:flex; gap:14px; margin:0 0 20px 0; flex-wrap:wrap; }
-.kpi-card { flex:1; min-width:150px; border-radius:16px; padding:18px 12px; text-align:center; transition:transform 0.2s ease; }
-.kpi-card:hover { transform:translateY(-4px); }
-.kpi-card-gold  { background:linear-gradient(135deg,#f0a500,#b37400); border:1px solid rgba(255,200,50,0.3); box-shadow:0 6px 30px rgba(240,165,0,0.3); }
-.kpi-card-orange{ background:linear-gradient(135deg,#e85d04,#9d0208); border:1px solid rgba(255,100,0,0.3); box-shadow:0 6px 30px rgba(232,93,4,0.3); }
-.kpi-card-purple{ background:linear-gradient(135deg,#7209b7,#3a0ca3); border:1px solid rgba(150,50,255,0.3); box-shadow:0 6px 30px rgba(114,9,183,0.3); }
-.kpi-card-blue  { background:linear-gradient(135deg,#0077b6,#023e8a); border:1px solid rgba(0,150,255,0.3); box-shadow:0 6px 30px rgba(0,119,182,0.3); }
-.kpi-card-green { background:linear-gradient(135deg,#2dc653,#1a7431); border:1px solid rgba(50,200,100,0.3); box-shadow:0 6px 30px rgba(45,198,83,0.3); }
-.kpi-icon { font-size:28px; margin-bottom:6px; }
-.kpi-label { font-size:9px; font-weight:700; letter-spacing:2px; color:rgba(255,255,255,0.7); text-transform:uppercase; margin-bottom:4px; }
-.kpi-name { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-.kpi-value { font-family:'Rajdhani',sans-serif; font-size:28px; font-weight:700; color:#fff; }
-.kpi-sub { font-size:10px; color:rgba(255,255,255,0.6); margin-top:2px; }
-.season-title { text-align:center; font-family:'Rajdhani',sans-serif; font-size:14px; font-weight:700; color:#f0a500; letter-spacing:3px; text-transform:uppercase; margin-bottom:12px; padding:10px; background:linear-gradient(90deg,rgba(240,165,0,0.03),rgba(240,165,0,0.1),rgba(240,165,0,0.03)); border-radius:10px; border:1px solid rgba(240,165,0,0.2); }
+.player-img-wrap { width:160px; height:160px; border-radius:50%; overflow:hidden; border:5px solid #f0a500; background:#0d1f3c; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:48px; box-shadow:0 8px 24px rgba(240,165,0,0.3); }
+.player-img-wrap img { width:100%; height:100%; object-fit:cover; }
+.player-name { font-family:'Rajdhani',sans-serif; font-size:36px; font-weight:700; color:#f0a500; margin:0 0 4px; }
+.player-profile { background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid rgba(240,165,0,0.4); border-radius:20px; padding:28px; margin:16px 0; display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; }
 .winner-grid { display:flex; flex-wrap:wrap; gap:12px; margin:10px 0 24px; }
 .winner-card { flex:1; min-width:150px; max-width:190px; background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid rgba(240,165,0,0.2); border-radius:14px; padding:14px 10px; text-align:center; transition:all 0.2s ease; }
 .winner-card:hover { border-color:#f0a500; box-shadow:0 6px 24px rgba(240,165,0,0.2); transform:translateY(-3px); }
@@ -79,27 +67,19 @@ h1,h2,h3 { font-family:'Rajdhani',sans-serif !important; }
 .team-logo-wrap { width:56px; height:56px; margin:0 auto 8px; background:rgba(255,255,255,0.05); border-radius:50%; display:flex; align-items:center; justify-content:center; border:1px solid rgba(255,255,255,0.1); overflow:hidden; }
 .team-logo-wrap img { width:46px; height:46px; object-fit:contain; }
 .team-name-label { font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700; color:#fff; line-height:1.3; }
-.player-profile { background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid rgba(240,165,0,0.4); border-radius:20px; padding:28px; margin:16px 0; display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; }
-.player-img-wrap { width:160px; height:160px; border-radius:50%; overflow:hidden; border:5px solid #f0a500; background:#0d1f3c; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:48px; box-shadow:0 8px 24px rgba(240,165,0,0.3); }
-.player-img-wrap img { width:100%; height:100%; object-fit:cover; }
-.player-name { font-family:'Rajdhani',sans-serif; font-size:36px; font-weight:700; color:#f0a500; margin:0 0 4px; }
-.player-subtitle { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase; }
-.stats-row { display:flex; flex-wrap:wrap; gap:16px; }
-.stat-box { text-align:center; min-width:65px; }
-.stat-box-val { font-family:'Rajdhani',sans-serif; font-size:24px; font-weight:700; }
-.stat-box-lbl { font-size:9px; color:rgba(255,255,255,0.45); letter-spacing:1px; text-transform:uppercase; margin-top:2px; }
-.info-card { background:rgba(240,165,0,0.05); border:1px solid rgba(240,165,0,0.2); border-radius:12px; padding:14px; margin:8px 0; }
-.info-label { font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1px; }
-.info-value { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; color:#f0a500; margin-top:4px; }
-.cricket-banner { background:linear-gradient(135deg,#f0a500,#e07b00); border-radius:10px; padding:9px; text-align:center; margin:8px 0; color:#04080f !important; font-weight:700; font-size:11px; letter-spacing:2px; text-transform:uppercase; }
-.stat-strip { display:flex; justify-content:space-around; background:rgba(240,165,0,0.05); border:1px solid rgba(240,165,0,0.15); border-radius:10px; padding:10px 4px; margin:8px 0; }
-.stat-num { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:#f0a500 !important; display:block; }
-.stat-lbl { font-size:9px; color:rgba(255,255,255,0.5) !important; display:block; letter-spacing:1px; text-transform:uppercase; }
-.match-card { background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid #f0a500; border-radius:14px; padding:18px; margin:12px 0; }
-.highlight-box { background:linear-gradient(135deg,#7209b7,#3a0ca3); border:1px solid rgba(150,50,255,0.3); border-radius:14px; padding:16px; margin:12px 0; }
-.social-links { display:flex; gap:12px; margin-top:12px; flex-wrap:wrap; }
-.social-btn { padding:8px 14px; background:rgba(240,165,0,0.1); border:1px solid #f0a500; border-radius:8px; color:#f0a500; text-decoration:none; font-size:12px; font-weight:700; transition:all 0.2s; }
-.social-btn:hover { background:#f0a500; color:#04080f; }
+.kpi-banner { display:flex; gap:14px; margin:0 0 20px 0; flex-wrap:wrap; }
+.kpi-card { flex:1; min-width:150px; border-radius:16px; padding:18px 12px; text-align:center; transition:transform 0.2s ease; }
+.kpi-card:hover { transform:translateY(-4px); }
+.kpi-card-gold { background:linear-gradient(135deg,#f0a500,#b37400); border:1px solid rgba(255,200,50,0.3); box-shadow:0 6px 30px rgba(240,165,0,0.3); }
+.kpi-card-orange { background:linear-gradient(135deg,#e85d04,#9d0208); border:1px solid rgba(255,100,0,0.3); box-shadow:0 6px 30px rgba(232,93,4,0.3); }
+.kpi-card-purple { background:linear-gradient(135deg,#7209b7,#3a0ca3); border:1px solid rgba(150,50,255,0.3); box-shadow:0 6px 30px rgba(114,9,183,0.3); }
+.kpi-card-blue { background:linear-gradient(135deg,#0077b6,#023e8a); border:1px solid rgba(0,150,255,0.3); box-shadow:0 6px 30px rgba(0,119,182,0.3); }
+.kpi-card-green { background:linear-gradient(135deg,#2dc653,#1a7431); border:1px solid rgba(50,200,100,0.3); box-shadow:0 6px 30px rgba(45,198,83,0.3); }
+.kpi-icon { font-size:28px; margin-bottom:6px; }
+.kpi-label { font-size:9px; font-weight:700; letter-spacing:2px; color:rgba(255,255,255,0.7); text-transform:uppercase; margin-bottom:4px; }
+.kpi-name { font-family:'Rajdhani',sans-serif; font-size:15px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.kpi-value { font-family:'Rajdhani',sans-serif; font-size:28px; font-weight:700; color:#fff; }
+.kpi-sub { font-size:10px; color:rgba(255,255,255,0.6); margin-top:2px; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -141,58 +121,33 @@ runs_col      = 'batsman_runs'   if 'batsman_runs'    in deliveries.columns else
 dismissal_col = 'dismissal_kind' if 'dismissal_kind'  in deliveries.columns else 'player_dismissed'
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PLAYER IMAGE & INFO FUNCTION
+# PLAYER IMAGE FUNCTION (ENHANCED)
 # ═══════════════════════════════════════════════════════════════════════════
 
 @st.cache_data
 def get_player_image(player_name):
-    """Get player image from cricket APIs"""
+    """Get player image from cricket APIs with multiple fallbacks"""
+    if not player_name:
+        return None
+    
     try:
         url = f"https://cricketdata.org/images/players/{player_name.lower().replace(' ', '_')}.jpg"
-        response = requests.head(url, timeout=2)
+        response = requests.head(url, timeout=3, allow_redirects=True)
         if response.status_code == 200:
             return url
     except:
         pass
+    
     try:
         name_slug = player_name.lower().replace(' ', '-')
         url = f"https://a.espncdn.com/media/cricket/players/{name_slug}.jpg"
-        response = requests.head(url, timeout=2)
+        response = requests.head(url, timeout=3, allow_redirects=True)
         if response.status_code == 200:
             return url
     except:
         pass
+    
     return None
-
-@st.cache_data
-def get_player_stats_by_year(player_name, deliveries_df, batter_col, runs_col):
-    """Get player stats by year"""
-    p_bat = deliveries_df[deliveries_df[batter_col]==player_name]
-    if len(p_bat) == 0:
-        return None
-    
-    # Assuming 'season' is available
-    yearly_stats = p_bat.groupby('season').agg({
-        runs_col: 'sum',
-        'ball': 'count'
-    }).reset_index()
-    yearly_stats.columns = ['Season', 'Runs', 'Balls']
-    yearly_stats['Strike_Rate'] = (yearly_stats['Runs']/yearly_stats['Balls']*100).round(2)
-    return yearly_stats.sort_values('Season')
-
-@st.cache_data
-def get_player_head_to_head(player_name, matches_df, deliveries_df, batter_col, runs_col):
-    """Get H2H stats vs different teams"""
-    p_bat = deliveries_df[deliveries_df[batter_col]==player_name]
-    if len(p_bat) == 0:
-        return None
-    
-    h2h = p_bat.groupby('bowling_team').agg({
-        runs_col: ['sum', 'count', 'mean']
-    }).reset_index()
-    h2h.columns = ['Team', 'Total_Runs', 'Balls', 'Avg_Per_Ball']
-    h2h = h2h.sort_values('Total_Runs', ascending=False).head(5)
-    return h2h
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SIDEBAR
@@ -203,15 +158,6 @@ st.sidebar.markdown("""
     <div style="font-size:44px;">🏆</div>
     <div style="font-family:'Rajdhani',sans-serif;color:#f0a500;font-size:22px;font-weight:700;letter-spacing:3px;margin-top:4px;">IPL PRO</div>
     <div style="color:rgba(255,255,255,0.3);font-size:9px;letter-spacing:4px;margin-top:2px;">ANALYTICS DASHBOARD</div>
-</div>""", unsafe_allow_html=True)
-
-st.sidebar.markdown('<div class="cricket-banner">🏏 IPL Analytics Dashboard</div>', unsafe_allow_html=True)
-
-st.sidebar.markdown("""
-<div class="stat-strip">
-    <div><span class="stat-num">16</span><span class="stat-lbl">Seasons</span></div>
-    <div><span class="stat-num">10</span><span class="stat-lbl">Teams</span></div>
-    <div><span class="stat-num">950+</span><span class="stat-lbl">Matches</span></div>
 </div>""", unsafe_allow_html=True)
 
 st.sidebar.markdown("---")
@@ -237,13 +183,6 @@ page = st.sidebar.radio("📌 Navigate", [
     "🤖 Win Predictor",
     "📤 Export Data"
 ])
-
-st.sidebar.markdown("---")
-st.sidebar.markdown("### 📚 Project Links")
-st.sidebar.markdown("[🔗 GitHub Repository](https://github.com/seenu123-tech/ipl-analytics-dashboard)")
-st.sidebar.markdown("[📊 Live Dashboard](https://seenu123-tech-ipl-analytics.streamlit.app)")
-
-st.sidebar.markdown("""<div style="text-align:center;margin-top:16px;color:rgba(255,255,255,0.2)!important;font-size:9px;letter-spacing:1px;">IPL 2008–2024 · Streamlit 🏏</div>""", unsafe_allow_html=True)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # DATA FILTERING
@@ -303,7 +242,7 @@ def get_all_season_winners(_matches):
     for s in sorted(_matches['season'].unique()):
         sm = _matches[_matches['season']==s]
         wc = sm['winner'].value_counts()
-        if len(wc)>0: rows.append({"season":str(s),"winner":wc.idxmax(),"wins":int(wc.max())})
+        if len(wc)>0: rows.append({"season":str(int(s)),"winner":wc.idxmax(),"wins":int(wc.max())})
     return rows
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -317,7 +256,7 @@ if kpis:
     wlogo = TEAM_LOGOS.get(kpis['winner'],"")
     logo_html = (f'<img src="{wlogo}" style="width:32px;height:32px;object-fit:contain;vertical-align:middle;" alt="{kpis["winner"]}" onerror="this.style.display=\'none\'" />' if wlogo else "🏆")
     
-    st.markdown(f'<div class="season-title">🏏 {label} — Season Highlights</div>', unsafe_allow_html=True)
+    st.markdown(f'<div style="text-align:center;font-family:Rajdhani,sans-serif;font-size:14px;font-weight:700;color:#f0a500;letter-spacing:3px;text-transform:uppercase;margin-bottom:12px;padding:10px;background:linear-gradient(90deg,rgba(240,165,0,0.03),rgba(240,165,0,0.1),rgba(240,165,0,0.03));border-radius:10px;border:1px solid rgba(240,165,0,0.2);">🏏 {label} — Season Highlights</div>', unsafe_allow_html=True)
     st.markdown(f"""
 <div class="kpi-banner">
   <div class="kpi-card kpi-card-gold"><div class="kpi-icon">{logo_html}</div><div class="kpi-label">Champion</div><div class="kpi-name">{kpis['winner']}</div><div class="kpi-value">{kpis['wins']}</div><div class="kpi-sub">wins</div></div>
@@ -325,14 +264,6 @@ if kpis:
   <div class="kpi-card kpi-card-purple"><div class="kpi-icon">🟣</div><div class="kpi-label">Purple Cap</div><div class="kpi-name">{kpis['purple_cap']}</div><div class="kpi-value">{kpis['purple_wickets']}</div><div class="kpi-sub">wickets</div></div>
   <div class="kpi-card kpi-card-blue"><div class="kpi-icon">🏏</div><div class="kpi-label">Highest Score</div><div class="kpi-name">{kpis['top_scorer']}</div><div class="kpi-value">{kpis['highest_score']}</div><div class="kpi-sub">runs in a match</div></div>
   <div class="kpi-card kpi-card-green"><div class="kpi-icon">🎳</div><div class="kpi-label">Best Bowling</div><div class="kpi-name">{kpis['best_bowler']}</div><div class="kpi-value">{kpis['best_bowl_wkts']}</div><div class="kpi-sub">wickets in a match</div></div>
-</div>""", unsafe_allow_html=True)
-    
-    st.markdown(f"""
-<div style="display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;">
-  <div style="flex:1;min-width:110px;background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid rgba(240,165,0,0.15);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#f0a500;">{kpis['total_runs']:,}</div><div style="font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;">Total Runs</div></div>
-  <div style="flex:1;min-width:110px;background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid rgba(240,165,0,0.15);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#e85d04;">{kpis['total_sixes']:,}</div><div style="font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;">Total Sixes</div></div>
-  <div style="flex:1;min-width:110px;background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid rgba(240,165,0,0.15);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#2dc653;">{kpis['total_fours']:,}</div><div style="font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;">Total Fours</div></div>
-  <div style="flex:1;min-width:110px;background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid rgba(240,165,0,0.15);border-radius:12px;padding:12px;text-align:center;"><div style="font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#7209b7;">{len(filtered_matches)}</div><div style="font-size:9px;color:rgba(255,255,255,0.4);letter-spacing:1px;text-transform:uppercase;">Matches</div></div>
 </div>""", unsafe_allow_html=True)
     st.markdown("---")
 
@@ -344,9 +275,11 @@ def styled_bar(df, x, y, color_col, scale, hover_tpl, orient='h'):
     try:
         fig = go.Figure()
         if orient == 'h':
-            fig.add_trace(go.Bar(x=df[x], y=df[y], orientation='h', marker_color='#f0a500'))
+            fig.add_trace(go.Bar(x=df[x], y=df[y], orientation='h', marker_color='#f0a500',
+                                hovertemplate='<b>%{y}</b><br>Value: %{x}<extra></extra>'))
         else:
-            fig.add_trace(go.Bar(x=df[x], y=df[y], marker_color='#f0a500'))
+            fig.add_trace(go.Bar(x=df[x], y=df[y], marker_color='#f0a500',
+                                hovertemplate='<b>%{x}</b><br>Value: %{y}<extra></extra>'))
         fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
                           hoverlabel=HOVER, hovermode='closest',
                           font=dict(color='white'),
@@ -357,14 +290,38 @@ def styled_bar(df, x, y, color_col, scale, hover_tpl, orient='h'):
         st.error(f"Error creating chart: {e}")
         return None
 
-def pltcfg(fig):
-    if fig is None:
+def create_interactive_line_chart(df, x_col, y_col, title="", line_color="#f0a500"):
+    """Create an interactive line chart with click highlighting"""
+    try:
+        fig = go.Figure()
+        
+        fig.add_trace(go.Scatter(
+            x=df[x_col],
+            y=df[y_col],
+            mode='lines+markers',
+            name=y_col,
+            line=dict(color=line_color, width=3),
+            marker=dict(size=8, color=line_color),
+            hovertemplate='<b>%{x}</b><br>Value: %{y:.2f}<extra></extra>',
+            fill='tozeroy',
+            fillcolor=f'rgba(240, 165, 0, 0.1)'
+        ))
+        
+        fig.update_layout(
+            plot_bgcolor='rgba(0,0,0,0)',
+            paper_bgcolor='rgba(0,0,0,0)',
+            font=dict(color='white'),
+            xaxis=dict(gridcolor='rgba(255,255,255,0.04)', showline=True, linewidth=1, linecolor='rgba(240,165,0,0.2)'),
+            yaxis=dict(gridcolor='rgba(255,255,255,0.04)', showline=True, linewidth=1, linecolor='rgba(240,165,0,0.2)'),
+            hovermode='x unified',
+            title=dict(text=title, font=dict(color='#f0a500', size=16)),
+            height=400
+        )
+        
+        return fig
+    except Exception as e:
+        st.error(f"Error creating line chart: {e}")
         return None
-    fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                      font=dict(color='white'),
-                      xaxis=dict(gridcolor='rgba(255,255,255,0.04)'),
-                      yaxis=dict(gridcolor='rgba(255,255,255,0.04)'))
-    return fig
 
 # ═══════════════════════════════════════════════════════════════════════════
 # PAGES
@@ -387,8 +344,9 @@ if page == "🏠 Overview":
     st.markdown('<div class="section-header">Win Method</div>', unsafe_allow_html=True)
     wt = filtered_matches['result'].value_counts().reset_index()
     wt.columns=['Result','Count']
-    fig = go.Figure(data=[go.Pie(labels=wt['Result'], values=wt['Count'], hole=.45)])
-    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
+    fig = go.Figure(data=[go.Pie(labels=wt['Result'], values=wt['Count'], hole=.45,
+                                  marker=dict(line=dict(color='#05101e', width=2)))])
+    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'), height=400)
     st.plotly_chart(fig, use_container_width=True)
 
 elif page == "🏆 Season Winners":
@@ -397,7 +355,7 @@ elif page == "🏆 Season Winners":
     cards_html = '<div class="winner-grid">'
     for sw in season_winners:
         logo  = TEAM_LOGOS.get(sw['winner'],"")
-        lhtml = f'<img src="{logo}" onerror="this.style.display=\'none\'" alt="{sw["winner"]}">' if logo else "🏆"
+        lhtml = f'<img src="{logo}" onerror="this.style.display=\'none\'" alt="{sw["winner"]}" style="width:46px;height:46px;object-fit:contain;">' if logo else "🏆"
         cards_html += f'<div class="winner-card"><div class="season-badge">IPL {sw["season"]}</div><div class="team-logo-wrap">{lhtml}</div><div class="team-name-label">{sw["winner"]}</div><div style="font-size:16px;margin-top:6px;">🏆</div></div>'
     cards_html += '</div>'
     st.markdown(cards_html, unsafe_allow_html=True)
@@ -441,17 +399,20 @@ elif page == "🪙 Toss Analysis":
         st.markdown('<div class="section-header">Toss Decision</div>', unsafe_allow_html=True)
         td = filtered_matches['toss_decision'].value_counts().reset_index()
         td.columns=['Decision','Count']
-        fig = go.Figure(data=[go.Pie(labels=td['Decision'], values=td['Count'], hole=.45)])
-        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
+        fig = go.Figure(data=[go.Pie(labels=td['Decision'], values=td['Count'], hole=.45,
+                                      marker=dict(line=dict(color='#05101e', width=2)))])
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'), height=400)
         st.plotly_chart(fig, use_container_width=True)
     with c2:
         st.markdown('<div class="section-header">Toss → Match Winner?</div>', unsafe_allow_html=True)
-        filtered_matches['tmw'] = filtered_matches['toss_winner']==filtered_matches['winner']
-        tw = filtered_matches['tmw'].value_counts().reset_index()
+        filtered_matches_copy = filtered_matches.copy()
+        filtered_matches_copy['tmw'] = filtered_matches_copy['toss_winner']==filtered_matches_copy['winner']
+        tw = filtered_matches_copy['tmw'].value_counts().reset_index()
         tw.columns=['Won','Count']
         tw['Won']=tw['Won'].map({True:'Yes',False:'No'})
-        fig = go.Figure(data=[go.Pie(labels=tw['Won'], values=tw['Count'], hole=.45)])
-        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
+        fig = go.Figure(data=[go.Pie(labels=tw['Won'], values=tw['Count'], hole=.45,
+                                      marker=dict(line=dict(color='#05101e', width=2)))])
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'), height=400)
         st.plotly_chart(fig, use_container_width=True)
 
 elif page == "🔍 Player Profile":
@@ -460,18 +421,17 @@ elif page == "🔍 Player Profile":
     search_name = st.selectbox("🔎 Search Player", ["Select a player..."] + all_players)
     
     if search_name != "Select a player...":
-        p_bat  = deliveries[deliveries[batter_col]==search_name]
+        p_bat = deliveries[deliveries[batter_col]==search_name]
         if len(p_bat) == 0:
             st.warning(f"No data found for {search_name}")
         else:
-            total_runs  = int(p_bat[runs_col].sum())
+            total_runs = int(p_bat[runs_col].sum())
             total_balls = int(len(p_bat))
             total_fours = int((p_bat[runs_col]==4).sum())
             total_sixes = int((p_bat[runs_col]==6).sum())
             strike_rate = round(total_runs/total_balls*100,2) if total_balls>0 else 0
             avg_per_match = round(total_runs / p_bat['match_id'].nunique(), 2) if p_bat['match_id'].nunique() > 0 else 0
             
-            # Get player image
             player_image = get_player_image(search_name)
             
             if player_image:
@@ -479,87 +439,60 @@ elif page == "🔍 Player Profile":
             else:
                 img_html = '🏏'
             
-            # MAIN PROFILE CARD
             st.markdown(f"""
 <div class="player-profile">
   <div class="player-img-wrap">{img_html}</div>
   <div style="flex:1;min-width:200px;">
     <div class="player-name">{search_name}</div>
-    <div class="player-subtitle">IPL Career Statistics</div>
-    <div class="stats-row">
-      <div class="stat-box"><div class="stat-box-val" style="color:#f0a500;">{total_runs:,}</div><div class="stat-box-lbl">Runs</div></div>
-      <div class="stat-box"><div class="stat-box-val" style="color:#f0a500;">{total_balls:,}</div><div class="stat-box-lbl">Balls</div></div>
-      <div class="stat-box"><div class="stat-box-val" style="color:#e8c547;">{strike_rate}</div><div class="stat-box-lbl">Strike Rate</div></div>
-      <div class="stat-box"><div class="stat-box-val" style="color:#2dc653;">{total_fours}</div><div class="stat-box-lbl">Fours</div></div>
-      <div class="stat-box"><div class="stat-box-val" style="color:#e85d04;">{total_sixes}</div><div class="stat-box-lbl">Sixes</div></div>
-      <div class="stat-box"><div class="stat-box-val" style="color:#0077b6;">{avg_per_match}</div><div class="stat-box-lbl">Avg/Match</div></div>
+    <div style="font-size:12px;color:rgba(255,255,255,0.45);margin-bottom:16px;letter-spacing:1px;text-transform:uppercase;">IPL Career Statistics</div>
+    <div style="display:flex;flex-wrap:wrap;gap:16px;">
+      <div style="text-align:center;min-width:65px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#f0a500;">{total_runs:,}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;margin-top:2px;">Runs</div>
+      </div>
+      <div style="text-align:center;min-width:65px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#f0a500;">{total_balls:,}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;margin-top:2px;">Balls</div>
+      </div>
+      <div style="text-align:center;min-width:65px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#e8c547;">{strike_rate}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;margin-top:2px;">Strike Rate</div>
+      </div>
+      <div style="text-align:center;min-width:65px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#2dc653;">{total_fours}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;margin-top:2px;">Fours</div>
+      </div>
+      <div style="text-align:center;min-width:65px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#e85d04;">{total_sixes}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;margin-top:2px;">Sixes</div>
+      </div>
+      <div style="text-align:center;min-width:65px;">
+        <div style="font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:#0077b6;">{avg_per_match}</div>
+        <div style="font-size:9px;color:rgba(255,255,255,0.45);letter-spacing:1px;text-transform:uppercase;margin-top:2px;">Avg/Match</div>
+      </div>
     </div>
   </div>
 </div>""", unsafe_allow_html=True)
-
-            # CAREER HIGHLIGHTS
-            st.markdown("<div class='section-header'>🌟 Career Highlights</div>", unsafe_allow_html=True)
-            c1, c2, c3 = st.columns(3)
-            with c1:
-                max_runs_match = p_bat.groupby('match_id')[runs_col].sum().max()
-                st.markdown(f"""
-<div class="info-card">
-  <div class="info-label">🏆 Highest Individual Score</div>
-  <div class="info-value">{int(max_runs_match)} Runs</div>
-</div>""", unsafe_allow_html=True)
             
-            with c2:
-                total_matches = p_bat['match_id'].nunique()
-                st.markdown(f"""
-<div class="info-card">
-  <div class="info-label">🏟️ Total Matches Played</div>
-  <div class="info-value">{total_matches} Matches</div>
-</div>""", unsafe_allow_html=True)
-            
-            with c3:
-                centuries = len(p_bat.groupby('match_id')[runs_col].sum()[(p_bat.groupby('match_id')[runs_col].sum() >= 100)])
-                st.markdown(f"""
-<div class="info-card">
-  <div class="info-label">💯 Half Centuries+</div>
-  <div class="info-value">{centuries} Times</div>
-</div>""", unsafe_allow_html=True)
-
-            # YEAR-WISE PERFORMANCE
-            st.markdown("<div class='section-header'>📈 Year-wise Performance</div>", unsafe_allow_html=True)
-            yearly_stats = get_player_stats_by_year(search_name, deliveries, batter_col, runs_col)
-            if yearly_stats is not None:
-                # Chart
-                fig = go.Figure()
-                fig.add_trace(go.Bar(x=yearly_stats['Season'], y=yearly_stats['Runs'], name='Runs', marker_color='#f0a500'))
-                fig.add_trace(go.Scatter(x=yearly_stats['Season'], y=yearly_stats['Strike_Rate'], name='Strike Rate', yaxis='y2', marker_color='#0077b6', mode='lines+markers'))
-                fig.update_layout(
-                    plot_bgcolor='rgba(0,0,0,0)',
-                    paper_bgcolor='rgba(0,0,0,0)',
-                    font=dict(color='white'),
-                    hovermode='x unified',
-                    xaxis=dict(gridcolor='rgba(255,255,255,0.04)'),
-                    yaxis=dict(title='Runs', gridcolor='rgba(255,255,255,0.04)'),
-                    yaxis2=dict(title='Strike Rate', overlaying='y', side='right')
-                )
-                st.plotly_chart(fig, use_container_width=True)
-                st.dataframe(yearly_stats, use_container_width=True, hide_index=True)
-
-            # HEAD TO HEAD
-            st.markdown("<div class='section-header'>⚔️ Head-to-Head vs Teams</div>", unsafe_allow_html=True)
-            h2h = get_player_head_to_head(search_name, matches, deliveries, batter_col, runs_col)
-            if h2h is not None:
-                fig = styled_bar(h2h,'Total_Runs','Team','Total_Runs','Oranges',"<b>%{y}</b><br>🏏 Runs: %{x}<extra></extra>")
-                if fig: st.plotly_chart(fig, use_container_width=True)
-                st.dataframe(h2h, use_container_width=True, hide_index=True)
-
-            # MATCH BY MATCH
-            st.markdown("<div class='section-header'>Match-by-Match Performance</div>", unsafe_allow_html=True)
+            st.markdown("<div class='section-header'>📈 Match Performance (Interactive)</div>", unsafe_allow_html=True)
             matches_info = p_bat.groupby('match_id').agg({runs_col: 'sum', 'ball': 'count'}).reset_index()
             matches_info.columns = ['Match ID', 'Runs', 'Balls']
             matches_info['Strike Rate'] = (matches_info['Runs']/matches_info['Balls']*100).round(2)
+            matches_info = matches_info.sort_values('Match ID', ascending=False)
+            
+            fig = create_interactive_line_chart(
+                matches_info.sort_values('Match ID'),
+                'Match ID',
+                'Runs',
+                f"Runs by Match - {search_name}",
+                '#f0a500'
+            )
+            if fig:
+                st.plotly_chart(fig, use_container_width=True)
+            
+            st.markdown("<div class='section-header'>Match Details Table</div>", unsafe_allow_html=True)
             st.dataframe(matches_info.head(20), use_container_width=True, hide_index=True)
             
-            # DOWNLOAD STATS
             st.markdown("<div class='section-header'>📥 Download Player Stats</div>", unsafe_allow_html=True)
             csv = matches_info.to_csv(index=False)
             st.download_button(
@@ -577,7 +510,12 @@ elif page == "⚔️ Player Comparison":
     with col1:
         player1 = st.selectbox("Select Player 1", players, key="p1")
     with col2:
-        player2 = st.selectbox("Select Player 2", [p for p in players if p != player1], key="p2")
+        player2_options = [p for p in players if p != player1]
+        if len(player2_options) > 0:
+            player2 = st.selectbox("Select Player 2", player2_options, key="p2")
+        else:
+            st.warning("Not enough players to compare")
+            player2 = None
     
     if player1 and player2:
         p1 = deliveries[deliveries[batter_col] == player1]
@@ -593,10 +531,17 @@ elif page == "⚔️ Player Comparison":
         st.dataframe(stats, use_container_width=True, hide_index=True)
         
         fig = go.Figure(data=[
-            go.Bar(name=player1, x=['Runs', 'Strike Rate'], y=[stats.loc[0, 'Runs'], stats.loc[0, 'Strike Rate']], marker_color='#0077b6'),
-            go.Bar(name=player2, x=['Runs', 'Strike Rate'], y=[stats.loc[1, 'Runs'], stats.loc[1, 'Strike Rate']], marker_color='#f0a500')
+            go.Bar(name=player1, x=['Runs', 'Strike Rate', 'Fours', 'Sixes'], 
+                   y=[stats.loc[0, 'Runs'], stats.loc[0, 'Strike Rate'], stats.loc[0, 'Fours'], stats.loc[0, 'Sixes']], 
+                   marker_color='#0077b6',
+                   hovertemplate='<b>' + player1 + '</b><br>%{x}: %{y}<extra></extra>'),
+            go.Bar(name=player2, x=['Runs', 'Strike Rate', 'Fours', 'Sixes'], 
+                   y=[stats.loc[1, 'Runs'], stats.loc[1, 'Strike Rate'], stats.loc[1, 'Fours'], stats.loc[1, 'Sixes']], 
+                   marker_color='#f0a500',
+                   hovertemplate='<b>' + player2 + '</b><br>%{x}: %{y}<extra></extra>')
         ])
-        fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font=dict(color='white'))
+        fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', 
+                         font=dict(color='white'), height=400, barmode='group')
         st.plotly_chart(fig, use_container_width=True)
 
 elif page == "📈 Match Analysis":
@@ -609,9 +554,9 @@ elif page == "📈 Match Analysis":
     if opts:
         sel_m = st.selectbox("Select Match", opts)
         try:
-            mid   = int(sel_m.split('|')[0].strip())
+            mid = int(sel_m.split('|')[0].strip())
             minfo = matches[matches['id']==mid].iloc[0]
-            mdel  = deliveries[deliveries['match_id']==mid]
+            mdel = deliveries[deliveries['match_id']==mid]
             
             t1l = TEAM_LOGOS.get(minfo['team1'],"")
             t2l = TEAM_LOGOS.get(minfo['team2'],"")
@@ -619,7 +564,7 @@ elif page == "📈 Match Analysis":
             t2h = f'<img src="{t2l}" style="width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:4px;" alt="{minfo["team2"]}" onerror="this.style.display=\'none\'" />' if t2l else ""
             
             st.markdown(f"""
-<div class="match-card">
+<div style="background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid #f0a500;border-radius:14px;padding:18px;margin:12px 0;">
   <h3 style="font-family:Rajdhani,sans-serif;color:#f0a500;margin:0;">{t1h}{minfo['team1']} <span style="color:rgba(255,255,255,0.25);">vs</span> {t2h}{minfo['team2']}</h3>
   <p style="color:rgba(255,255,255,0.5);margin:6px 0 0;font-size:13px;">📍 {minfo.get('venue','N/A')} &nbsp;|&nbsp; 📅 {minfo.get('date','N/A')} &nbsp;|&nbsp; 🏆 Winner: <b style="color:#f0a500;">{minfo.get('winner','N/A')}</b></p>
 </div>""", unsafe_allow_html=True)
@@ -629,8 +574,8 @@ elif page == "📈 Match Analysis":
                 inning_stats = mdel.groupby('inning').agg({'total_runs': 'sum', 'ball': 'count'}).reset_index()
                 inning_stats.columns = ['Inning', 'Total Runs', 'Balls']
                 st.dataframe(inning_stats, use_container_width=True, hide_index=True)
-        except:
-            st.info("No match data available")
+        except Exception as e:
+            st.error(f"Error: {str(e)}")
 
 elif page == "🤖 Win Predictor":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">🤖 Win Predictor</h1>', unsafe_allow_html=True)
@@ -668,9 +613,7 @@ elif page == "🤖 Win Predictor":
         
         clf, le_t, le_v = train_model()
         
-        if clf is None:
-            st.error("Failed to train prediction model")
-        else:
+        if clf:
             tl = sorted(matches['team1'].dropna().unique().tolist())
             vl = sorted(matches['venue'].dropna().unique().tolist())
             
@@ -688,28 +631,27 @@ elif page == "🤖 Win Predictor":
                 pd_ = st.radio("📋 Toss Decision", ["Bat", "Field"], key="toss_decision_sel")
             
             if st.button("🔮 Predict Winner", use_container_width=True):
-                try:
-                    if not pt1 or not pt2 or not pv:
-                        st.error("❌ Please select all required fields")
-                    else:
-                        t1e = le_t.transform([pt1])[0]
-                        t2e = le_t.transform([pt2])[0]
-                        
-                        try:
-                            ve = le_v.transform([pv])[0]
-                        except:
-                            ve = 0
-                        
-                        tw = 1 if ptw == pt1 else 0
-                        de = 1 if pd_ == "Bat" else 0
-                        
-                        features = [[t1e, t2e, ve, tw, de]]
-                        prob = clf.predict_proba(features)[0]
-                        
-                        p1 = round(prob[1] * 100, 1)
-                        p2 = round(prob[0] * 100, 1)
-                        
-                        st.markdown(f"""
+                if not pt1 or not pt2 or not pv:
+                    st.error("❌ Please select all required fields")
+                else:
+                    t1e = le_t.transform([pt1])[0]
+                    t2e = le_t.transform([pt2])[0]
+                    
+                    try:
+                        ve = le_v.transform([pv])[0]
+                    except:
+                        ve = 0
+                    
+                    tw = 1 if ptw == pt1 else 0
+                    de = 1 if pd_ == "Bat" else 0
+                    
+                    features = [[t1e, t2e, ve, tw, de]]
+                    prob = clf.predict_proba(features)[0]
+                    
+                    p1 = round(prob[1] * 100, 1)
+                    p2 = round(prob[0] * 100, 1)
+                    
+                    st.markdown(f"""
 <div style="background:linear-gradient(135deg,#0d1f3c,#071526);border:2px solid #f0a500;border-radius:20px;padding:28px;text-align:center;margin:16px 0;">
   <div style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;color:#f0a500;margin-bottom:20px;letter-spacing:2px;">🔮 PREDICTION</div>
   <div style="display:flex;justify-content:space-around;align-items:center;">
@@ -718,9 +660,6 @@ elif page == "🤖 Win Predictor":
     <div><div style="font-family:Rajdhani,sans-serif;font-size:44px;font-weight:700;color:#f0a500;">{p2}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt2}</div></div>
   </div>
 </div>""", unsafe_allow_html=True)
-                        
-                except Exception as e:
-                    st.error(f"❌ Prediction error: {str(e)}")
     
     except ImportError:
         st.warning("⚠️ scikit-learn package required")
