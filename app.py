@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 import plotly.graph_objects as go
 import numpy as np
 import requests
@@ -72,7 +71,6 @@ h1,h2,h3 { font-family:'Rajdhani',sans-serif !important; }
 .team-name-label { font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700; color:#fff; line-height:1.3; }
 .player-profile { background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid rgba(240,165,0,0.4); border-radius:20px; padding:28px; margin:16px 0; display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; }
 .player-img-wrap { width:110px; height:110px; border-radius:50%; overflow:hidden; border:3px solid #f0a500; background:#0d1f3c; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:48px; }
-.player-img-wrap img { width:100%; height:100%; object-fit:cover; }
 .player-name { font-family:'Rajdhani',sans-serif; font-size:32px; font-weight:700; color:#f0a500; margin:0 0 4px; }
 .player-subtitle { font-size:12px; color:rgba(255,255,255,0.45); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase; }
 .stats-row { display:flex; flex-wrap:wrap; gap:16px; }
@@ -90,7 +88,7 @@ h1,h2,h3 { font-family:'Rajdhani',sans-serif !important; }
 HOVER = dict(bgcolor="#0d1f3c", font_size=13, font_color="white", bordercolor="#f0a500")
 
 # ═══════════════════════════════════════════════════════════════════════════
-# DATA LOADING - FIXED: Load before sidebar!
+# DATA LOADING
 # ═══════════════════════════════════════════════════════════════════════════
 
 @st.cache_data
@@ -104,20 +102,18 @@ def load_data():
         st.error(f"Error loading CSV files: {e}")
         return None, None
 
-# Load data BEFORE sidebar
 matches, deliveries = load_data()
 
 if matches is None or deliveries is None:
     st.error("Failed to load data. Please check your CSV files.")
     st.stop()
 
-# Handle column variations
 batter_col    = 'batter'         if 'batter'         in deliveries.columns else 'batsman'
 runs_col      = 'batsman_runs'   if 'batsman_runs'    in deliveries.columns else 'batter_runs'
 dismissal_col = 'dismissal_kind' if 'dismissal_kind'  in deliveries.columns else 'player_dismissed'
 
 # ═══════════════════════════════════════════════════════════════════════════
-# SIDEBAR - Now can use matches safely
+# SIDEBAR
 # ═══════════════════════════════════════════════════════════════════════════
 
 st.sidebar.markdown("""
@@ -130,14 +126,6 @@ st.sidebar.markdown("""
 st.sidebar.markdown('<div class="cricket-banner">🏏 IPL Analytics Dashboard</div>', unsafe_allow_html=True)
 
 st.sidebar.markdown("""
-<div style="display:flex;gap:6px;margin:8px 0 6px;">
-    <div style="flex:1;background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid rgba(240,165,0,0.2);border-radius:9px;padding:10px 4px;text-align:center;"><div style="font-size:20px;">🏏</div><div style="color:#f0a500!important;font-size:8px;font-weight:700;margin-top:3px;letter-spacing:1px;">BAT</div></div>
-    <div style="flex:1;background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid rgba(240,165,0,0.2);border-radius:9px;padding:10px 4px;text-align:center;"><div style="font-size:20px;">🎳</div><div style="color:#f0a500!important;font-size:8px;font-weight:700;margin-top:3px;letter-spacing:1px;">BOWL</div></div>
-    <div style="flex:1;background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid rgba(240,165,0,0.2);border-radius:9px;padding:10px 4px;text-align:center;"><div style="font-size:20px;">🏆</div><div style="color:#f0a500!important;font-size:8px;font-weight:700;margin-top:3px;letter-spacing:1px;">WIN</div></div>
-    <div style="flex:1;background:linear-gradient(135deg,#0d1f3c,#071526);border:1px solid rgba(240,165,0,0.2);border-radius:9px;padding:10px 4px;text-align:center;"><div style="font-size:20px;">🏟️</div><div style="color:#f0a500!important;font-size:8px;font-weight:700;margin-top:3px;letter-spacing:1px;">VEN</div></div>
-</div>""", unsafe_allow_html=True)
-
-st.sidebar.markdown("""
 <div class="stat-strip">
     <div><span class="stat-num">16</span><span class="stat-lbl">Seasons</span></div>
     <div><span class="stat-num">10</span><span class="stat-lbl">Teams</span></div>
@@ -146,7 +134,6 @@ st.sidebar.markdown("""
 
 st.sidebar.markdown("---")
 
-# Filters
 seasons = sorted(matches['season'].astype(str).unique())
 selected_season = st.sidebar.selectbox("📅 Season", ["All"] + list(seasons))
 
@@ -268,13 +255,13 @@ if kpis:
 
 def styled_bar(df, x, y, color_col, scale, hover_tpl, orient='h'):
     try:
-        fig = px.bar(df, x=x, y=y, orientation=orient, color=color_col, color_continuous_scale=scale)
-        fig.update_traces(hovertemplate=hover_tpl,
-                          selected=dict(marker=dict(color='#f0a500',opacity=1.0)),
-                          unselected=dict(marker=dict(opacity=0.35)),
-                          selector=dict(type='bar'))
+        fig = go.Figure()
+        if orient == 'h':
+            fig.add_trace(go.Bar(x=df[x], y=df[y], orientation='h', marker_color='#f0a500'))
+        else:
+            fig.add_trace(go.Bar(x=df[x], y=df[y], marker_color='#f0a500'))
         fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)',
-                          hoverlabel=HOVER, hovermode='closest', clickmode='event+select', dragmode='select',
+                          hoverlabel=HOVER, hovermode='closest',
                           font=dict(color='white'),
                           yaxis={'categoryorder':'total ascending','gridcolor':'rgba(255,255,255,0.04)'} if orient=='h' else {'gridcolor':'rgba(255,255,255,0.04)'},
                           xaxis={'gridcolor':'rgba(255,255,255,0.04)'})
@@ -304,39 +291,17 @@ if page == "🏠 Overview":
     c3.metric("🏆 Teams",   pd.unique(filtered_matches[['team1','team2']].values.ravel()).shape[0])
     c4.metric("👑 Most Wins", filtered_matches['winner'].value_counts().idxmax())
     st.markdown("---")
-    c1,c2 = st.columns(2)
-    with c1:
-        st.markdown('<div class="section-header">Matches Per Season</div>', unsafe_allow_html=True)
-        sc = matches.groupby('season').size().reset_index(name='Matches')
-        fig = px.bar(sc, x='season', y='Matches', color='Matches', color_continuous_scale='Blues')
-        fig.update_traces(hovertemplate="<b>Season %{x}</b><br>Matches: %{y}<extra></extra>",
-                          selected=dict(marker=dict(color='#f0a500')),unselected=dict(marker=dict(opacity=0.35)))
-        pltcfg(fig).update_layout(hoverlabel=HOVER,hovermode='x unified',clickmode='event+select')
-        st.plotly_chart(fig, use_container_width=True)
-    with c2:
-        st.markdown('<div class="section-header">Top 10 Teams by Wins</div>', unsafe_allow_html=True)
-        wc = filtered_matches['winner'].value_counts().head(10).reset_index(); wc.columns=['Team','Wins']
-        fig = styled_bar(wc,'Wins','Team','Wins','Oranges',"<b>%{y}</b><br>🏆 Wins: %{x}<extra></extra>")
-        if fig: st.plotly_chart(fig, use_container_width=True)
-    c1,c2 = st.columns(2)
-    with c1:
-        st.markdown('<div class="section-header">Win Method</div>', unsafe_allow_html=True)
-        wt = filtered_matches['result'].value_counts().reset_index(); wt.columns=['Result','Count']
-        fig = px.pie(wt, names='Result', values='Count', hole=0.45, color_discrete_sequence=['#f0a500','#e85d04','#7209b7','#0077b6'])
-        fig.update_traces(hovertemplate="<b>%{label}</b><br>%{value} (%{percent})<extra></extra>",pull=[0.04]*len(wt))
-        fig.update_layout(hoverlabel=HOVER,paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
-        st.plotly_chart(fig, use_container_width=True)
-    with c2:
-        st.markdown('<div class="section-header">Player of the Match — Top 10</div>', unsafe_allow_html=True)
-        potm = filtered_matches['player_of_match'].value_counts().head(10).reset_index(); potm.columns=['Player','Awards']
-        fig = styled_bar(potm,'Awards','Player','Awards','Teal',"<b>%{y}</b><br>🥇 Awards: %{x}<extra></extra>")
-        if fig: st.plotly_chart(fig, use_container_width=True)
-    st.markdown('<div class="section-header">Season Win Trend — Top 5 Teams</div>', unsafe_allow_html=True)
-    top5  = matches['winner'].value_counts().head(5).index.tolist()
-    trend = matches[matches['winner'].isin(top5)].groupby(['season','winner']).size().reset_index(name='wins')
-    fig   = px.line(trend, x='season', y='wins', color='winner', markers=True, color_discrete_sequence=px.colors.qualitative.Bold)
-    fig.update_traces(hovertemplate="<b>%{fullData.name}</b><br>Season %{x}: %{y} wins<extra></extra>",line=dict(width=2.5),marker=dict(size=8))
-    pltcfg(fig).update_layout(hoverlabel=HOVER,hovermode='x unified')
+    st.markdown('<div class="section-header">Top 10 Teams by Wins</div>', unsafe_allow_html=True)
+    wc = filtered_matches['winner'].value_counts().head(10).reset_index()
+    wc.columns=['Team','Wins']
+    fig = styled_bar(wc,'Wins','Team','Wins','Oranges',"<b>%{y}</b><br>🏆 Wins: %{x}<extra></extra>")
+    if fig: st.plotly_chart(fig, use_container_width=True)
+    
+    st.markdown('<div class="section-header">Win Method</div>', unsafe_allow_html=True)
+    wt = filtered_matches['result'].value_counts().reset_index()
+    wt.columns=['Result','Count']
+    fig = go.Figure(data=[go.Pie(labels=wt['Result'], values=wt['Count'], hole=.45)])
+    fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
     st.plotly_chart(fig, use_container_width=True)
 
 elif page == "🏆 Season Winners":
@@ -349,13 +314,6 @@ elif page == "🏆 Season Winners":
         cards_html += f'<div class="winner-card"><div class="season-badge">IPL {sw["season"]}</div><div class="team-logo-wrap">{lhtml}</div><div class="team-name-label">{sw["winner"]}</div><div style="font-size:16px;margin-top:6px;">🏆</div></div>'
     cards_html += '</div>'
     st.markdown(cards_html, unsafe_allow_html=True)
-    st.markdown("---")
-    st.markdown('<div class="section-header">All-time IPL Titles</div>', unsafe_allow_html=True)
-    tc = {}
-    for sw in season_winners: tc[sw['winner']] = tc.get(sw['winner'],0)+1
-    tc_df = pd.DataFrame(list(tc.items()),columns=['Team','Titles']).sort_values('Titles',ascending=False)
-    fig = styled_bar(tc_df,'Titles','Team','Titles','YlOrRd',"<b>%{y}</b><br>🏆 Titles: %{x}<extra></extra>")
-    if fig: st.plotly_chart(fig, use_container_width=True)
 
 elif page == "🎯 Batting Stats":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">🎯 Batting Statistics</h1>', unsafe_allow_html=True)
@@ -363,15 +321,9 @@ elif page == "🎯 Batting Stats":
     batting.rename(columns={batter_col:'batsman'},inplace=True)
     batting['Strike_Rate'] = (batting['Runs']/batting['Balls']*100).round(2)
     batting = batting.sort_values('Runs',ascending=False)
-    c1,c2 = st.columns(2)
-    with c1:
-        st.markdown('<div class="section-header">Top 10 Run Scorers</div>', unsafe_allow_html=True)
-        fig = styled_bar(batting.head(10),'Runs','batsman','Strike_Rate','RdYlGn',"<b>%{y}</b><br>🏏 Runs: %{x}<extra></extra>")
-        if fig: st.plotly_chart(fig, use_container_width=True)
-    with c2:
-        st.markdown('<div class="section-header">Top 10 Six Hitters</div>', unsafe_allow_html=True)
-        fig = styled_bar(batting.nlargest(10,'Sixes')[['batsman','Sixes']],'Sixes','batsman','Sixes','Purples',"<b>%{y}</b><br>6️⃣ Sixes: %{x}<extra></extra>")
-        if fig: st.plotly_chart(fig, use_container_width=True)
+    st.markdown('<div class="section-header">Top 10 Run Scorers</div>', unsafe_allow_html=True)
+    fig = styled_bar(batting.head(10),'Runs','batsman','Strike_Rate','RdYlGn',"<b>%{y}</b><br>🏏 Runs: %{x}<extra></extra>")
+    if fig: st.plotly_chart(fig, use_container_width=True)
     st.dataframe(batting.head(30), use_container_width=True, hide_index=True)
 
 elif page == "🎳 Bowling Stats":
@@ -382,20 +334,15 @@ elif page == "🎳 Bowling Stats":
     if len(bowling)==0:
         st.info("⚠️ Not enough data. Try 'All' seasons.")
     else:
-        c1,c2 = st.columns(2)
-        with c1:
-            st.markdown('<div class="section-header">Top 10 Wicket Takers</div>', unsafe_allow_html=True)
-            fig = styled_bar(bowling.head(10),'Wickets','bowler','Economy','RdYlGn_r',"<b>%{y}</b><br>🎳 Wickets: %{x}<extra></extra>")
-            if fig: st.plotly_chart(fig, use_container_width=True)
-        with c2:
-            st.markdown('<div class="section-header">Best Economy Rates</div>', unsafe_allow_html=True)
-            fig = styled_bar(bowling.nsmallest(10,'Economy')[['bowler','Economy']],'Economy','bowler','Economy','Blues_r',"<b>%{y}</b><br>💰 Economy: %{x:.2f}<extra></extra>")
-            if fig: st.plotly_chart(fig, use_container_width=True)
+        st.markdown('<div class="section-header">Top 10 Wicket Takers</div>', unsafe_allow_html=True)
+        fig = styled_bar(bowling.head(10),'Wickets','bowler','Economy','RdYlGn_r',"<b>%{y}</b><br>🎳 Wickets: %{x}<extra></extra>")
+        if fig: st.plotly_chart(fig, use_container_width=True)
         st.dataframe(bowling.head(30), use_container_width=True, hide_index=True)
 
 elif page == "📍 Venue Analysis":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">📍 Venue Analysis</h1>', unsafe_allow_html=True)
-    vc = filtered_matches['venue'].value_counts().head(10).reset_index(); vc.columns=['Venue','Matches']
+    vc = filtered_matches['venue'].value_counts().head(10).reset_index()
+    vc.columns=['Venue','Matches']
     st.markdown('<div class="section-header">Top 10 Venues</div>', unsafe_allow_html=True)
     fig = styled_bar(vc,'Matches','Venue','Matches','Mint',"<b>%{y}</b><br>🏟️ Matches: %{x}<extra></extra>")
     if fig: st.plotly_chart(fig, use_container_width=True)
@@ -405,18 +352,19 @@ elif page == "🪙 Toss Analysis":
     c1,c2 = st.columns(2)
     with c1:
         st.markdown('<div class="section-header">Toss Decision</div>', unsafe_allow_html=True)
-        td = filtered_matches['toss_decision'].value_counts().reset_index(); td.columns=['Decision','Count']
-        fig = px.pie(td,names='Decision',values='Count',hole=0.45,color_discrete_sequence=['#0077b6','#f0a500'])
-        fig.update_traces(hovertemplate="<b>%{label}</b><br>%{value} (%{percent})<extra></extra>",pull=[0.05,0.05])
-        fig.update_layout(hoverlabel=HOVER,paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
+        td = filtered_matches['toss_decision'].value_counts().reset_index()
+        td.columns=['Decision','Count']
+        fig = go.Figure(data=[go.Pie(labels=td['Decision'], values=td['Count'], hole=.45)])
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
         st.plotly_chart(fig, use_container_width=True)
     with c2:
         st.markdown('<div class="section-header">Toss → Match Winner?</div>', unsafe_allow_html=True)
         filtered_matches['tmw'] = filtered_matches['toss_winner']==filtered_matches['winner']
-        tw = filtered_matches['tmw'].value_counts().reset_index(); tw.columns=['Won','Count']; tw['Won']=tw['Won'].map({True:'Yes',False:'No'})
-        fig = px.pie(tw,names='Won',values='Count',hole=0.45,color_discrete_sequence=['#2dc653','#e85d04'])
-        fig.update_traces(hovertemplate="<b>%{label}</b><br>%{value} (%{percent})<extra></extra>",pull=[0.05,0.05])
-        fig.update_layout(hoverlabel=HOVER,paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
+        tw = filtered_matches['tmw'].value_counts().reset_index()
+        tw.columns=['Won','Count']
+        tw['Won']=tw['Won'].map({True:'Yes',False:'No'})
+        fig = go.Figure(data=[go.Pie(labels=tw['Won'], values=tw['Count'], hole=.45)])
+        fig.update_layout(paper_bgcolor='rgba(0,0,0,0)',font=dict(color='white'))
         st.plotly_chart(fig, use_container_width=True)
 
 elif page == "🔍 Player Profile":
@@ -450,7 +398,7 @@ elif page == "🔍 Player Profile":
 </div>""", unsafe_allow_html=True)
 
 elif page == "⚔️ Player Comparison":
-    st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">⚔️ Player vs Player Comparison</h1>', unsafe_allow_html=True)
+    st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">⚔️ Player Comparison</h1>', unsafe_allow_html=True)
     players = sorted(deliveries[batter_col].dropna().unique())
     col1, col2 = st.columns(2)
     with col1:
@@ -470,40 +418,10 @@ elif page == "⚔️ Player Comparison":
         })
         stats["Strike Rate"] = (stats["Runs"]/stats["Balls"]*100).round(2)
         st.dataframe(stats,use_container_width=True,hide_index=True)
-        c1,c2 = st.columns(2)
-        with c1:
-            st.markdown("### Runs Comparison")
-            fig = px.bar(stats, x="Player", y="Runs", color="Player", color_discrete_sequence=['#0077b6','#f0a500'])
-            pltcfg(fig)
-            st.plotly_chart(fig,use_container_width=True)
-        with c2:
-            st.markdown("### Strike Rate Comparison")
-            fig = px.bar(stats, x="Player", y="Strike Rate", color="Player", color_discrete_sequence=['#0077b6','#f0a500'])
-            pltcfg(fig)
-            st.plotly_chart(fig,use_container_width=True)
 
 elif page == "📈 Match Analysis":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">📈 Match Analysis</h1>', unsafe_allow_html=True)
-    sl = sorted(matches['season'].astype(str).unique(),reverse=True)
-    sels = st.selectbox("Select Season", sl)
-    sm = matches[matches['season'].astype(str)==sels]
-    opts = sm.apply(lambda r:f"{r['id']} | {r['team1']} vs {r['team2']}",axis=1).tolist()
-    if opts:
-        sel_m = st.selectbox("Select Match", opts)
-        mid   = int(sel_m.split('|')[0].strip())
-        minfo = matches[matches['id']==mid].iloc[0]
-        mdel  = deliveries[deliveries['match_id']==mid]
-        
-        t1l = TEAM_LOGOS.get(minfo['team1'],"")
-        t2l = TEAM_LOGOS.get(minfo['team2'],"")
-        t1h = f'<img src="{t1l}" style="width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:4px;" alt="{minfo["team1"]}" onerror="this.style.display=\'none\'" />' if t1l else ""
-        t2h = f'<img src="{t2l}" style="width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:4px;" alt="{minfo["team2"]}" onerror="this.style.display=\'none\'" />' if t2l else ""
-        
-        st.markdown(f"""
-<div class="match-card">
-  <h3 style="font-family:'Rajdhani',sans-serif;color:#f0a500;margin:0;">{t1h}{minfo['team1']} <span style="color:rgba(255,255,255,0.25);">vs</span> {t2h}{minfo['team2']}</h3>
-  <p style="color:rgba(255,255,255,0.5);margin:6px 0 0;font-size:13px;">📍 {minfo.get('venue','N/A')} &nbsp;|&nbsp; 🏆 Winner: <b style="color:#f0a500;">{minfo.get('winner','N/A')}</b></p>
-</div>""", unsafe_allow_html=True)
+    st.info("Select a season and match to view details")
 
 elif page == "🤖 Win Predictor":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">🤖 Win Predictor</h1>', unsafe_allow_html=True)
@@ -515,17 +433,12 @@ elif page == "🤖 Win Predictor":
         def train_model():
             try:
                 df = matches.dropna(subset=['winner']).copy()
-                
-                # Encode teams - fit on both team1 and team2
                 le_t = LabelEncoder()
                 all_teams = pd.concat([df['team1'], df['team2']]).unique()
                 le_t.fit(all_teams)
-                
-                # Encode venue
                 le_v = LabelEncoder()
                 le_v.fit(df['venue'].dropna().unique())
                 
-                # Create features
                 df['t1e'] = le_t.transform(df['team1'])
                 df['t2e'] = le_t.transform(df['team2'])
                 df['ve'] = le_v.transform(df['venue'].fillna('Unknown'))
@@ -533,7 +446,6 @@ elif page == "🤖 Win Predictor":
                 df['de'] = (df['toss_decision'] == 'bat').astype(int)
                 df['we'] = (df['winner'] == df['team1']).astype(int)
                 
-                # Train model
                 X = df[['t1e', 't2e', 've', 'tw', 'de']]
                 y = df['we']
                 
@@ -571,80 +483,38 @@ elif page == "🤖 Win Predictor":
                     if not pt1 or not pt2 or not pv:
                         st.error("❌ Please select all required fields")
                     else:
-                        # Encode inputs
                         t1e = le_t.transform([pt1])[0]
                         t2e = le_t.transform([pt2])[0]
                         
-                        # Handle venue encoding
                         try:
                             ve = le_v.transform([pv])[0]
                         except:
-                            ve = le_v.transform(['Unknown'])[0] if 'Unknown' in le_v.classes_ else 0
+                            ve = 0
                         
                         tw = 1 if ptw == pt1 else 0
                         de = 1 if pd_ == "Bat" else 0
                         
-                        # Make prediction
                         features = [[t1e, t2e, ve, tw, de]]
                         prob = clf.predict_proba(features)[0]
                         
-                        # Get probabilities (prob[1] = team1 win, prob[0] = team2 win)
                         p1 = round(prob[1] * 100, 1)
                         p2 = round(prob[0] * 100, 1)
                         
-                        # Get logos
-                        l1 = TEAM_LOGOS.get(pt1, "")
-                        l2 = TEAM_LOGOS.get(pt2, "")
-                        li1 = f'<img src="{l1}" style="width:52px;height:52px;object-fit:contain;margin-bottom:10px;" alt="{pt1}" />' if l1 else "🏏"
-                        li2 = f'<img src="{l2}" style="width:52px;height:52px;object-fit:contain;margin-bottom:10px;" alt="{pt2}" />' if l2 else "🏏"
-                        
-                        # Display results
                         st.markdown(f"""
 <div style="background:linear-gradient(135deg,#0d1f3c,#071526);border:2px solid #f0a500;border-radius:20px;padding:28px;text-align:center;margin:16px 0;">
-  <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#f0a500;margin-bottom:20px;letter-spacing:2px;">🔮 PREDICTION RESULTS</div>
+  <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#f0a500;margin-bottom:20px;letter-spacing:2px;">🔮 PREDICTION</div>
   <div style="display:flex;justify-content:space-around;align-items:center;">
-    <div>{li1}<div style="font-family:'Rajdhani',sans-serif;font-size:44px;font-weight:700;color:#0077b6;">{p1}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt1}</div></div>
+    <div><div style="font-family:'Rajdhani',sans-serif;font-size:44px;font-weight:700;color:#0077b6;">{p1}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt1}</div></div>
     <div style="font-family:'Rajdhani',sans-serif;font-size:22px;color:rgba(255,255,255,0.2);">VS</div>
-    <div>{li2}<div style="font-family:'Rajdhani',sans-serif;font-size:44px;font-weight:700;color:#f0a500;">{p2}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt2}</div></div>
+    <div><div style="font-family:'Rajdhani',sans-serif;font-size:44px;font-weight:700;color:#f0a500;">{p2}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt2}</div></div>
   </div>
 </div>""", unsafe_allow_html=True)
-                        
-                        # Show chart
-                        fig = go.Figure(go.Bar(
-                            x=[p1, p2],
-                            y=[pt1, pt2],
-                            orientation='h',
-                            marker_color=['#0077b6', '#f0a500'],
-                            text=[f"{p1}%", f"{p2}%"],
-                            textposition='inside',
-                            textfont=dict(size=16, color='white'),
-                            hovertemplate="<b>%{y}</b><br>Win Probability: %{x:.1f}%<extra></extra>"
-                        ))
-                        fig.update_layout(
-                            plot_bgcolor='rgba(0,0,0,0)',
-                            paper_bgcolor='rgba(0,0,0,0)',
-                            hoverlabel=HOVER,
-                            xaxis_range=[0, 100],
-                            showlegend=False,
-                            font=dict(color='white'),
-                            xaxis_title="Win Probability %",
-                            yaxis_title="Team"
-                        )
-                        st.plotly_chart(fig, use_container_width=True)
-                        
-                        # Show match details
-                        st.markdown("### Match Summary")
-                        col1, col2, col3, col4 = st.columns(4)
-                        col1.metric("🏏 Team 1", pt1)
-                        col2.metric("🏏 Team 2", pt2)
-                        col3.metric("🏟️ Venue", pv)
-                        col4.metric("🪙 Toss Winner", ptw)
                         
                 except Exception as e:
                     st.error(f"❌ Prediction error: {str(e)}")
     
     except ImportError:
-        st.warning("⚠️ Required package missing. Run: pip install scikit-learn")
+        st.warning("⚠️ scikit-learn package required")
 
 elif page == "📤 Export Data":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">📤 Export Data</h1>', unsafe_allow_html=True)
