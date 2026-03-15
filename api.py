@@ -6,6 +6,7 @@ import pandas as pd
 from functools import lru_cache
 import time
 import os
+import requests
 
 app = FastAPI(title="IPL Analytics API", description="IPL Cricket Analytics API")
 
@@ -127,6 +128,66 @@ init_database()
 
 
 # ═══════════════════════════════════════════════════════════════════════════
+# PLAYER IMAGE & INFO ENDPOINT
+# ═══════════════════════════════════════════════════════════════════════════
+
+@app.get("/player_image")
+def get_player_image(player_name: str):
+    """Get player image URL from multiple sources"""
+    try:
+        # Try cricketdata API
+        url = f"https://cricketdata.org/images/players/{player_name.lower().replace(' ', '_')}.jpg"
+        response = requests.head(url, timeout=2)
+        if response.status_code == 200:
+            return {
+                "player": player_name,
+                "image_url": url,
+                "source": "cricketdata.org",
+                "status": "success"
+            }
+    except:
+        pass
+    
+    try:
+        # Try ESPN Cricinfo
+        name_slug = player_name.lower().replace(' ', '-')
+        url = f"https://a.espncdn.com/media/cricket/players/{name_slug}.jpg"
+        response = requests.head(url, timeout=2)
+        if response.status_code == 200:
+            return {
+                "player": player_name,
+                "image_url": url,
+                "source": "espncricinfo.com",
+                "status": "success"
+            }
+    except:
+        pass
+    
+    try:
+        # Try Cricapi
+        url = f"https://crex.cricketdata.org/media/players/{player_name.lower().replace(' ', '-')}.jpg"
+        response = requests.head(url, timeout=2)
+        if response.status_code == 200:
+            return {
+                "player": player_name,
+                "image_url": url,
+                "source": "crex.cricketdata.org",
+                "status": "success"
+            }
+    except:
+        pass
+    
+    # Return fallback if no image found
+    return {
+        "player": player_name,
+        "image_url": None,
+        "source": "none",
+        "status": "not_found",
+        "fallback": "emoji"
+    }
+
+
+# ═══════════════════════════════════════════════════════════════════════════
 # HEALTH CHECK
 # ═══════════════════════════════════════════════════════════════════════════
 
@@ -137,7 +198,8 @@ def health():
     return {
         "status": "API Running",
         "database": db_exists,
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "player_image_endpoint": "/player_image?player_name=Virat%20Kohli"
     }
 
 
@@ -151,7 +213,8 @@ def home():
     return {
         "message": "IPL Analytics API Running",
         "docs": "/docs",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "new_endpoint": "/player_image?player_name=PlayerName"
     }
 
 
@@ -394,7 +457,7 @@ def get_toss_analysis(db: sqlite3.Connection = Depends(get_db)):
 
 
 # ═══════════════════════════════════════════════════════════════════════════
-# PLAYER PROFILE
+# PLAYER PROFILE (ENHANCED WITH TEAM INFO)
 # ═══════════════════════════════════════════════════════════════════════════
 
 @app.get("/player_profile")
@@ -417,6 +480,77 @@ def get_player_profile(player: str, db: sqlite3.Connection = Depends(get_db)):
         """
         result = query_db(db, query, (player,))
         return result[0] if result else {"error": f"Player {player} not found"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PLAYER TEAMS
+# ═══════════════════════════════════════════════════════════════════════════
+
+@app.get("/player_teams")
+def get_player_teams(player: str, db: sqlite3.Connection = Depends(get_db)):
+    """Get teams a player has played for"""
+    try:
+        if db is None:
+            return {"error": "Database connection failed"}
+        
+        query = """
+        SELECT DISTINCT d.batting_team as team
+        FROM deliveries d
+        WHERE d.batter=?
+        ORDER BY team
+        """
+        teams = query_db(db, query, (player,))
+        return {
+            "player": player,
+            "teams": [t["team"] for t in teams],
+            "total_teams": len(teams)
+        } if teams else {"error": f"No teams found for {player}"}
+    except Exception as e:
+        return {"error": str(e)}
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PLAYER ACHIEVEMENTS
+# ═══════════════════════════════════════════════════════════════════════════
+
+@app.get("/player_achievements")
+def get_player_achievements(player: str, db: sqlite3.Connection = Depends(get_db)):
+    """Get player achievements"""
+    try:
+        if db is None:
+            return {"error": "Database connection failed"}
+        
+        # Get man of the match count
+        query_motm = """
+        SELECT COUNT(*) as count
+        FROM matches
+        WHERE player_of_match = ?
+        """
+        motm = query_db(db, query_motm, (player,))
+        motm_count = motm[0]["count"] if motm else 0
+        
+        # Get centuries (50+ runs in a match)
+        query_centuries = """
+        SELECT COUNT(*) as count
+        FROM (
+            SELECT SUM(batsman_runs) as runs
+            FROM deliveries
+            WHERE batter = ?
+            GROUP BY match_id
+            HAVING runs >= 50
+        )
+        """
+        centuries = query_db(db, query_centuries, (player,))
+        centuries_count = centuries[0]["count"] if centuries else 0
+        
+        return {
+            "player": player,
+            "man_of_match": motm_count,
+            "half_centuries_plus": centuries_count,
+            "total_achievements": motm_count + centuries_count
+        }
     except Exception as e:
         return {"error": str(e)}
 
@@ -571,19 +705,10 @@ def win_predictor(runs_left: int, balls_left: int, wickets: int):
         rrr = (runs_left * 6) / balls_left
         
         # FIXED FORMULA: Better scaling for realistic probabilities
-        # Normalize RRR (divide by 10 to scale it reasonably)
-        rrr_factor = (rrr / 10) * 50  # RRR impact on probability
-        
-        # Wickets factor (each wicket is about 5% buffer)
+        rrr_factor = (rrr / 10) * 50
         wickets_factor = wickets * 5
-        
-        # Base probability from RRR (start at 50%)
         base_probability = 50
-        
-        # Adjust by required run rate (subtract because high RRR = low probability)
         probability = base_probability - rrr_factor + wickets_factor
-        
-        # Clamp between 0 and 100
         probability = max(0, min(100, probability))
 
         return {
@@ -606,6 +731,9 @@ if __name__ == "__main__":
     
     print("🚀 Starting IPL Analytics API...")
     print("📚 API Docs: http://127.0.0.1:8000/docs")
+    print("✅ NEW: Player Image endpoint at /player_image")
+    print("✅ NEW: Player Teams endpoint at /player_teams")
+    print("✅ NEW: Player Achievements endpoint at /player_achievements")
     print("✅ All fixes applied - Ready to use!")
     
     uvicorn.run(
