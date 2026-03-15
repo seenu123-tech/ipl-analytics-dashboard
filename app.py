@@ -8,7 +8,16 @@ from functools import lru_cache
 
 warnings.filterwarnings("ignore")
 
-st.set_page_config(page_title="IPL Analytics Pro", page_icon="🏏", layout="wide", initial_sidebar_state="expanded")
+# ═══════════════════════════════════════════════════════════════════════════
+# PAGE CONFIG
+# ═══════════════════════════════════════════════════════════════════════════
+
+st.set_page_config(
+    page_title="IPL Analytics Dashboard",
+    page_icon="🏏",
+    layout="wide",
+    initial_sidebar_state="expanded"
+)
 
 # ═══════════════════════════════════════════════════════════════════════════
 # CONFIGURATION
@@ -71,6 +80,7 @@ h1,h2,h3 { font-family:'Rajdhani',sans-serif !important; }
 .team-name-label { font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700; color:#fff; line-height:1.3; }
 .player-profile { background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid rgba(240,165,0,0.4); border-radius:20px; padding:28px; margin:16px 0; display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; }
 .player-img-wrap { width:110px; height:110px; border-radius:50%; overflow:hidden; border:3px solid #f0a500; background:#0d1f3c; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:48px; }
+.player-img-wrap img { width:100%; height:100%; object-fit:cover; }
 .player-name { font-family:'Rajdhani',sans-serif; font-size:32px; font-weight:700; color:#f0a500; margin:0 0 4px; }
 .player-subtitle { font-size:12px; color:rgba(255,255,255,0.45); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase; }
 .stats-row { display:flex; flex-wrap:wrap; gap:16px; }
@@ -88,12 +98,22 @@ h1,h2,h3 { font-family:'Rajdhani',sans-serif !important; }
 HOVER = dict(bgcolor="#0d1f3c", font_size=13, font_color="white", bordercolor="#f0a500")
 
 # ═══════════════════════════════════════════════════════════════════════════
+# DASHBOARD TITLE
+# ═══════════════════════════════════════════════════════════════════════════
+
+st.markdown("""
+<div style="text-align:center;padding:20px 0;">
+    <h1 style="font-family:'Rajdhani',sans-serif;color:#f0a500;font-size:48px;margin:0;">🏏 IPL ANALYTICS DASHBOARD</h1>
+    <p style="color:rgba(255,255,255,0.6);font-size:14px;margin-top:8px;">Interactive Cricket Data Analysis using Python, Pandas & Plotly</p>
+</div>
+""", unsafe_allow_html=True)
+
+# ═══════════════════════════════════════════════════════════════════════════
 # DATA LOADING
 # ═══════════════════════════════════════════════════════════════════════════
 
 @st.cache_data
 def load_data():
-    """Load data from CSV files"""
     try:
         matches = pd.read_csv("data/matches.csv")
         deliveries = pd.read_csv("data/deliveries.csv")
@@ -155,6 +175,11 @@ page = st.sidebar.radio("📌 Navigate", [
     "🤖 Win Predictor",
     "📤 Export Data"
 ])
+
+st.sidebar.markdown("---")
+st.sidebar.markdown("### 📚 Project Links")
+st.sidebar.markdown("[🔗 GitHub Repository](https://github.com/seenu123-tech/ipl-analytics-dashboard)")
+st.sidebar.markdown("[📊 Live Dashboard](https://seenu123-tech-ipl-analytics.streamlit.app)")
 
 st.sidebar.markdown("""<div style="text-align:center;margin-top:16px;color:rgba(255,255,255,0.2)!important;font-size:9px;letter-spacing:1px;">IPL 2008–2024 · Streamlit 🏏</div>""", unsafe_allow_html=True)
 
@@ -381,6 +406,7 @@ elif page == "🔍 Player Profile":
             total_fours = int((p_bat[runs_col]==4).sum())
             total_sixes = int((p_bat[runs_col]==6).sum())
             strike_rate = round(total_runs/total_balls*100,2) if total_balls>0 else 0
+            
             st.markdown(f"""
 <div class="player-profile">
   <div class="player-img-wrap">🏏</div>
@@ -396,6 +422,12 @@ elif page == "🔍 Player Profile":
     </div>
   </div>
 </div>""", unsafe_allow_html=True)
+            
+            st.markdown("<div class='section-header'>Match Performance</div>", unsafe_allow_html=True)
+            matches_info = p_bat.groupby('match_id').agg({runs_col: 'sum', 'ball': 'count'}).reset_index()
+            matches_info.columns = ['Match ID', 'Runs', 'Balls']
+            matches_info['Strike Rate'] = (matches_info['Runs']/matches_info['Balls']*100).round(2)
+            st.dataframe(matches_info.head(20), use_container_width=True, hide_index=True)
 
 elif page == "⚔️ Player Comparison":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">⚔️ Player Comparison</h1>', unsafe_allow_html=True)
@@ -417,11 +449,47 @@ elif page == "⚔️ Player Comparison":
             "Sixes":[(p1[runs_col]==6).sum(),(p2[runs_col]==6).sum()],
         })
         stats["Strike Rate"] = (stats["Runs"]/stats["Balls"]*100).round(2)
-        st.dataframe(stats,use_container_width=True,hide_index=True)
+        st.dataframe(stats, use_container_width=True, hide_index=True)
+        
+        fig = go.Figure(data=[
+            go.Bar(name=player1, x=['Runs', 'Strike Rate'], y=[stats.loc[0, 'Runs'], stats.loc[0, 'Strike Rate']], marker_color='#0077b6'),
+            go.Bar(name=player2, x=['Runs', 'Strike Rate'], y=[stats.loc[1, 'Runs'], stats.loc[1, 'Strike Rate']], marker_color='#f0a500')
+        ])
+        fig.update_layout(plot_bgcolor='rgba(0,0,0,0)', paper_bgcolor='rgba(0,0,0,0)', font=dict(color='white'))
+        st.plotly_chart(fig, use_container_width=True)
 
 elif page == "📈 Match Analysis":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">📈 Match Analysis</h1>', unsafe_allow_html=True)
-    st.info("Select a season and match to view details")
+    sl = sorted(matches['season'].astype(str).unique(),reverse=True)
+    sels = st.selectbox("Select Season", sl)
+    sm = matches[matches['season'].astype(str)==sels]
+    opts = sm.apply(lambda r:f"{r['id']} | {r['team1']} vs {r['team2']} | {r['date']}",axis=1).tolist()
+    
+    if opts:
+        sel_m = st.selectbox("Select Match", opts)
+        try:
+            mid   = int(sel_m.split('|')[0].strip())
+            minfo = matches[matches['id']==mid].iloc[0]
+            mdel  = deliveries[deliveries['match_id']==mid]
+            
+            t1l = TEAM_LOGOS.get(minfo['team1'],"")
+            t2l = TEAM_LOGOS.get(minfo['team2'],"")
+            t1h = f'<img src="{t1l}" style="width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:4px;" alt="{minfo["team1"]}" onerror="this.style.display=\'none\'" />' if t1l else ""
+            t2h = f'<img src="{t2l}" style="width:28px;height:28px;object-fit:contain;vertical-align:middle;margin-right:4px;" alt="{minfo["team2"]}" onerror="this.style.display=\'none\'" />' if t2l else ""
+            
+            st.markdown(f"""
+<div class="match-card">
+  <h3 style="font-family:Rajdhani,sans-serif;color:#f0a500;margin:0;">{t1h}{minfo['team1']} <span style="color:rgba(255,255,255,0.25);">vs</span> {t2h}{minfo['team2']}</h3>
+  <p style="color:rgba(255,255,255,0.5);margin:6px 0 0;font-size:13px;">📍 {minfo.get('venue','N/A')} &nbsp;|&nbsp; 📅 {minfo.get('date','N/A')} &nbsp;|&nbsp; 🏆 Winner: <b style="color:#f0a500;">{minfo.get('winner','N/A')}</b></p>
+</div>""", unsafe_allow_html=True)
+            
+            if len(mdel) > 0:
+                st.markdown("<div class='section-header'>Innings Breakdown</div>", unsafe_allow_html=True)
+                inning_stats = mdel.groupby('inning').agg({'total_runs': 'sum', 'ball': 'count'}).reset_index()
+                inning_stats.columns = ['Inning', 'Total Runs', 'Balls']
+                st.dataframe(inning_stats, use_container_width=True, hide_index=True)
+        except:
+            st.info("No match data available")
 
 elif page == "🤖 Win Predictor":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">🤖 Win Predictor</h1>', unsafe_allow_html=True)
@@ -502,11 +570,11 @@ elif page == "🤖 Win Predictor":
                         
                         st.markdown(f"""
 <div style="background:linear-gradient(135deg,#0d1f3c,#071526);border:2px solid #f0a500;border-radius:20px;padding:28px;text-align:center;margin:16px 0;">
-  <div style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;color:#f0a500;margin-bottom:20px;letter-spacing:2px;">🔮 PREDICTION</div>
+  <div style="font-family:Rajdhani,sans-serif;font-size:20px;font-weight:700;color:#f0a500;margin-bottom:20px;letter-spacing:2px;">🔮 PREDICTION</div>
   <div style="display:flex;justify-content:space-around;align-items:center;">
-    <div><div style="font-family:'Rajdhani',sans-serif;font-size:44px;font-weight:700;color:#0077b6;">{p1}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt1}</div></div>
-    <div style="font-family:'Rajdhani',sans-serif;font-size:22px;color:rgba(255,255,255,0.2);">VS</div>
-    <div><div style="font-family:'Rajdhani',sans-serif;font-size:44px;font-weight:700;color:#f0a500;">{p2}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt2}</div></div>
+    <div><div style="font-family:Rajdhani,sans-serif;font-size:44px;font-weight:700;color:#0077b6;">{p1}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt1}</div></div>
+    <div style="font-family:Rajdhani,sans-serif;font-size:22px;color:rgba(255,255,255,0.2);">VS</div>
+    <div><div style="font-family:Rajdhani,sans-serif;font-size:44px;font-weight:700;color:#f0a500;">{p2}%</div><div style="color:rgba(255,255,255,0.6);font-size:14px;">{pt2}</div></div>
   </div>
 </div>""", unsafe_allow_html=True)
                         
@@ -521,9 +589,9 @@ elif page == "📤 Export Data":
     c1,c2 = st.columns(2)
     with c1:
         st.markdown("#### 🏏 Matches")
-        st.dataframe(filtered_matches.head(20),use_container_width=True, hide_index=True)
+        st.dataframe(filtered_matches.head(20), use_container_width=True, hide_index=True)
         st.download_button("⬇️ Download Matches CSV",filtered_matches.to_csv(index=False).encode(),"ipl_matches.csv","text/csv",use_container_width=True)
     with c2:
         st.markdown("#### 🎳 Deliveries")
-        st.dataframe(filtered_deliveries.head(20),use_container_width=True, hide_index=True)
+        st.dataframe(filtered_deliveries.head(20), use_container_width=True, hide_index=True)
         st.download_button("⬇️ Download Deliveries CSV",filtered_deliveries.head(5000).to_csv(index=False).encode(),"ipl_deliveries.csv","text/csv",use_container_width=True)
