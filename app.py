@@ -5,6 +5,7 @@ import numpy as np
 import requests
 import warnings
 from functools import lru_cache
+from datetime import datetime
 
 warnings.filterwarnings("ignore")
 
@@ -79,19 +80,26 @@ h1,h2,h3 { font-family:'Rajdhani',sans-serif !important; }
 .team-logo-wrap img { width:46px; height:46px; object-fit:contain; }
 .team-name-label { font-family:'Rajdhani',sans-serif; font-size:13px; font-weight:700; color:#fff; line-height:1.3; }
 .player-profile { background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid rgba(240,165,0,0.4); border-radius:20px; padding:28px; margin:16px 0; display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; }
-.player-img-wrap { width:110px; height:110px; border-radius:50%; overflow:hidden; border:3px solid #f0a500; background:#0d1f3c; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:48px; }
+.player-img-wrap { width:160px; height:160px; border-radius:50%; overflow:hidden; border:5px solid #f0a500; background:#0d1f3c; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:48px; box-shadow:0 8px 24px rgba(240,165,0,0.3); }
 .player-img-wrap img { width:100%; height:100%; object-fit:cover; }
-.player-name { font-family:'Rajdhani',sans-serif; font-size:32px; font-weight:700; color:#f0a500; margin:0 0 4px; }
-.player-subtitle { font-size:12px; color:rgba(255,255,255,0.45); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase; }
+.player-name { font-family:'Rajdhani',sans-serif; font-size:36px; font-weight:700; color:#f0a500; margin:0 0 4px; }
+.player-subtitle { font-size:13px; color:rgba(255,255,255,0.45); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase; }
 .stats-row { display:flex; flex-wrap:wrap; gap:16px; }
 .stat-box { text-align:center; min-width:65px; }
 .stat-box-val { font-family:'Rajdhani',sans-serif; font-size:24px; font-weight:700; }
 .stat-box-lbl { font-size:9px; color:rgba(255,255,255,0.45); letter-spacing:1px; text-transform:uppercase; margin-top:2px; }
+.info-card { background:rgba(240,165,0,0.05); border:1px solid rgba(240,165,0,0.2); border-radius:12px; padding:14px; margin:8px 0; }
+.info-label { font-size:11px; color:rgba(255,255,255,0.4); text-transform:uppercase; letter-spacing:1px; }
+.info-value { font-family:'Rajdhani',sans-serif; font-size:16px; font-weight:700; color:#f0a500; margin-top:4px; }
 .cricket-banner { background:linear-gradient(135deg,#f0a500,#e07b00); border-radius:10px; padding:9px; text-align:center; margin:8px 0; color:#04080f !important; font-weight:700; font-size:11px; letter-spacing:2px; text-transform:uppercase; }
 .stat-strip { display:flex; justify-content:space-around; background:rgba(240,165,0,0.05); border:1px solid rgba(240,165,0,0.15); border-radius:10px; padding:10px 4px; margin:8px 0; }
 .stat-num { font-family:'Rajdhani',sans-serif; font-size:20px; font-weight:700; color:#f0a500 !important; display:block; }
 .stat-lbl { font-size:9px; color:rgba(255,255,255,0.5) !important; display:block; letter-spacing:1px; text-transform:uppercase; }
 .match-card { background:linear-gradient(135deg,#0d1f3c,#071526); border:1px solid #f0a500; border-radius:14px; padding:18px; margin:12px 0; }
+.highlight-box { background:linear-gradient(135deg,#7209b7,#3a0ca3); border:1px solid rgba(150,50,255,0.3); border-radius:14px; padding:16px; margin:12px 0; }
+.social-links { display:flex; gap:12px; margin-top:12px; flex-wrap:wrap; }
+.social-btn { padding:8px 14px; background:rgba(240,165,0,0.1); border:1px solid #f0a500; border-radius:8px; color:#f0a500; text-decoration:none; font-size:12px; font-weight:700; transition:all 0.2s; }
+.social-btn:hover { background:#f0a500; color:#04080f; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -131,6 +139,60 @@ if matches is None or deliveries is None:
 batter_col    = 'batter'         if 'batter'         in deliveries.columns else 'batsman'
 runs_col      = 'batsman_runs'   if 'batsman_runs'    in deliveries.columns else 'batter_runs'
 dismissal_col = 'dismissal_kind' if 'dismissal_kind'  in deliveries.columns else 'player_dismissed'
+
+# ═══════════════════════════════════════════════════════════════════════════
+# PLAYER IMAGE & INFO FUNCTION
+# ═══════════════════════════════════════════════════════════════════════════
+
+@st.cache_data
+def get_player_image(player_name):
+    """Get player image from cricket APIs"""
+    try:
+        url = f"https://cricketdata.org/images/players/{player_name.lower().replace(' ', '_')}.jpg"
+        response = requests.head(url, timeout=2)
+        if response.status_code == 200:
+            return url
+    except:
+        pass
+    try:
+        name_slug = player_name.lower().replace(' ', '-')
+        url = f"https://a.espncdn.com/media/cricket/players/{name_slug}.jpg"
+        response = requests.head(url, timeout=2)
+        if response.status_code == 200:
+            return url
+    except:
+        pass
+    return None
+
+@st.cache_data
+def get_player_stats_by_year(player_name, deliveries_df, batter_col, runs_col):
+    """Get player stats by year"""
+    p_bat = deliveries_df[deliveries_df[batter_col]==player_name]
+    if len(p_bat) == 0:
+        return None
+    
+    # Assuming 'season' is available
+    yearly_stats = p_bat.groupby('season').agg({
+        runs_col: 'sum',
+        'ball': 'count'
+    }).reset_index()
+    yearly_stats.columns = ['Season', 'Runs', 'Balls']
+    yearly_stats['Strike_Rate'] = (yearly_stats['Runs']/yearly_stats['Balls']*100).round(2)
+    return yearly_stats.sort_values('Season')
+
+@st.cache_data
+def get_player_head_to_head(player_name, matches_df, deliveries_df, batter_col, runs_col):
+    """Get H2H stats vs different teams"""
+    p_bat = deliveries_df[deliveries_df[batter_col]==player_name]
+    if len(p_bat) == 0:
+        return None
+    
+    h2h = p_bat.groupby('bowling_team').agg({
+        runs_col: ['sum', 'count', 'mean']
+    }).reset_index()
+    h2h.columns = ['Team', 'Total_Runs', 'Balls', 'Avg_Per_Ball']
+    h2h = h2h.sort_values('Total_Runs', ascending=False).head(5)
+    return h2h
 
 # ═══════════════════════════════════════════════════════════════════════════
 # SIDEBAR
@@ -396,6 +458,7 @@ elif page == "🔍 Player Profile":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">🔍 Player Profile</h1>', unsafe_allow_html=True)
     all_players = sorted(deliveries[batter_col].dropna().unique().tolist())
     search_name = st.selectbox("🔎 Search Player", ["Select a player..."] + all_players)
+    
     if search_name != "Select a player...":
         p_bat  = deliveries[deliveries[batter_col]==search_name]
         if len(p_bat) == 0:
@@ -406,10 +469,20 @@ elif page == "🔍 Player Profile":
             total_fours = int((p_bat[runs_col]==4).sum())
             total_sixes = int((p_bat[runs_col]==6).sum())
             strike_rate = round(total_runs/total_balls*100,2) if total_balls>0 else 0
+            avg_per_match = round(total_runs / p_bat['match_id'].nunique(), 2) if p_bat['match_id'].nunique() > 0 else 0
             
+            # Get player image
+            player_image = get_player_image(search_name)
+            
+            if player_image:
+                img_html = f'<img src="{player_image}" style="width:100%;height:100%;object-fit:cover;" alt="{search_name}" />'
+            else:
+                img_html = '🏏'
+            
+            # MAIN PROFILE CARD
             st.markdown(f"""
 <div class="player-profile">
-  <div class="player-img-wrap">🏏</div>
+  <div class="player-img-wrap">{img_html}</div>
   <div style="flex:1;min-width:200px;">
     <div class="player-name">{search_name}</div>
     <div class="player-subtitle">IPL Career Statistics</div>
@@ -419,15 +492,83 @@ elif page == "🔍 Player Profile":
       <div class="stat-box"><div class="stat-box-val" style="color:#e8c547;">{strike_rate}</div><div class="stat-box-lbl">Strike Rate</div></div>
       <div class="stat-box"><div class="stat-box-val" style="color:#2dc653;">{total_fours}</div><div class="stat-box-lbl">Fours</div></div>
       <div class="stat-box"><div class="stat-box-val" style="color:#e85d04;">{total_sixes}</div><div class="stat-box-lbl">Sixes</div></div>
+      <div class="stat-box"><div class="stat-box-val" style="color:#0077b6;">{avg_per_match}</div><div class="stat-box-lbl">Avg/Match</div></div>
     </div>
   </div>
 </div>""", unsafe_allow_html=True)
+
+            # CAREER HIGHLIGHTS
+            st.markdown("<div class='section-header'>🌟 Career Highlights</div>", unsafe_allow_html=True)
+            c1, c2, c3 = st.columns(3)
+            with c1:
+                max_runs_match = p_bat.groupby('match_id')[runs_col].sum().max()
+                st.markdown(f"""
+<div class="info-card">
+  <div class="info-label">🏆 Highest Individual Score</div>
+  <div class="info-value">{int(max_runs_match)} Runs</div>
+</div>""", unsafe_allow_html=True)
             
-            st.markdown("<div class='section-header'>Match Performance</div>", unsafe_allow_html=True)
+            with c2:
+                total_matches = p_bat['match_id'].nunique()
+                st.markdown(f"""
+<div class="info-card">
+  <div class="info-label">🏟️ Total Matches Played</div>
+  <div class="info-value">{total_matches} Matches</div>
+</div>""", unsafe_allow_html=True)
+            
+            with c3:
+                centuries = len(p_bat.groupby('match_id')[runs_col].sum()[(p_bat.groupby('match_id')[runs_col].sum() >= 100)])
+                st.markdown(f"""
+<div class="info-card">
+  <div class="info-label">💯 Half Centuries+</div>
+  <div class="info-value">{centuries} Times</div>
+</div>""", unsafe_allow_html=True)
+
+            # YEAR-WISE PERFORMANCE
+            st.markdown("<div class='section-header'>📈 Year-wise Performance</div>", unsafe_allow_html=True)
+            yearly_stats = get_player_stats_by_year(search_name, deliveries, batter_col, runs_col)
+            if yearly_stats is not None:
+                # Chart
+                fig = go.Figure()
+                fig.add_trace(go.Bar(x=yearly_stats['Season'], y=yearly_stats['Runs'], name='Runs', marker_color='#f0a500'))
+                fig.add_trace(go.Scatter(x=yearly_stats['Season'], y=yearly_stats['Strike_Rate'], name='Strike Rate', yaxis='y2', marker_color='#0077b6', mode='lines+markers'))
+                fig.update_layout(
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    font=dict(color='white'),
+                    hovermode='x unified',
+                    xaxis=dict(gridcolor='rgba(255,255,255,0.04)'),
+                    yaxis=dict(title='Runs', gridcolor='rgba(255,255,255,0.04)'),
+                    yaxis2=dict(title='Strike Rate', overlaying='y', side='right')
+                )
+                st.plotly_chart(fig, use_container_width=True)
+                st.dataframe(yearly_stats, use_container_width=True, hide_index=True)
+
+            # HEAD TO HEAD
+            st.markdown("<div class='section-header'>⚔️ Head-to-Head vs Teams</div>", unsafe_allow_html=True)
+            h2h = get_player_head_to_head(search_name, matches, deliveries, batter_col, runs_col)
+            if h2h is not None:
+                fig = styled_bar(h2h,'Total_Runs','Team','Total_Runs','Oranges',"<b>%{y}</b><br>🏏 Runs: %{x}<extra></extra>")
+                if fig: st.plotly_chart(fig, use_container_width=True)
+                st.dataframe(h2h, use_container_width=True, hide_index=True)
+
+            # MATCH BY MATCH
+            st.markdown("<div class='section-header'>Match-by-Match Performance</div>", unsafe_allow_html=True)
             matches_info = p_bat.groupby('match_id').agg({runs_col: 'sum', 'ball': 'count'}).reset_index()
             matches_info.columns = ['Match ID', 'Runs', 'Balls']
             matches_info['Strike Rate'] = (matches_info['Runs']/matches_info['Balls']*100).round(2)
             st.dataframe(matches_info.head(20), use_container_width=True, hide_index=True)
+            
+            # DOWNLOAD STATS
+            st.markdown("<div class='section-header'>📥 Download Player Stats</div>", unsafe_allow_html=True)
+            csv = matches_info.to_csv(index=False)
+            st.download_button(
+                label="⬇️ Download Player Stats as CSV",
+                data=csv,
+                file_name=f"{search_name}_stats.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
 
 elif page == "⚔️ Player Comparison":
     st.markdown('<h1 style="font-family:Rajdhani,sans-serif;color:#f0a500;">⚔️ Player Comparison</h1>', unsafe_allow_html=True)
